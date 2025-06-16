@@ -1,0 +1,921 @@
+<!docType html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Meta-Programming in Rust</title>
+
+    <meta name="description" content="Meta-Programming in Rust">
+    <meta name="author" content="Didier Plaindoux">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css">
+    <link rel="stylesheet" href="revealjs/dist/reveal.css">
+    <link rel="stylesheet" href="revealjs/dist/theme/dracula.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="revealjs/plugin/highlight/monokai.css">
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+        <section>
+            <p>&nbsp;</p>
+            <h3>Metaprogramming in Rust</h3>
+            <br/>
+            <img src="images/MySelf.png" alt="My Self Image"/>
+            <br>
+            <small>@dplaindoux@functional.cafe </small>
+        </section>
+
+        <section>
+            <h4> Self-Promotion </h4>
+
+            <p class="fragment"><a href="https://github.com/d-plaindoux/apacen">Apacen</a> an Open Source
+                Declarative Type Dependent System Prover in Prolog (Strategy, Proof Tree, Holes etc.).
+            </p>
+            <p class="fragment"><a href="https://www.immofix.com">Immofix Simuréno</a> an Expert System
+                Dedicated to Real-Estate Matchmaking and Negotiation, Integrating Sustainability Criteria.
+            </p>
+            <p class="fragment"><a href="https://www.kaptngo.com">Kaptngo</a> a Secure Distributed System
+                for Decentralized Executions with Streamlined Communications.
+            </p>
+        </section>
+
+        <section>
+            <h3> Metaprogramming <span class="fragment fade-out">in Rust</span></h3>
+        </section>
+
+        <section>
+            <h4> Metaprogramming / Definition </h4>
+            <p class="fragment">
+                "A computer programming technique in which programs have the ability to treat other
+                programs as their data." (wikipedia)
+            </p>
+        </section>
+
+        <section>
+            <h4> Homoiconicity / Definition </h4>
+
+            <p class="fragment">
+                "A language is homoiconic if a program written in it can be manipulated as data using
+                the language." <br/> (wikipedia)
+            </p>
+        </section>
+
+        <section>
+            <h4> Metaprogramming approaches </h4>
+            <ul>
+                <li class="fragment"> Compilers thanks to Abstract Syntax Tree (AST)</li>
+                <li class="fragment"> Dynamic via evaluation function e.g. Javascript</li>
+                <li class="fragment"> Representation manipulation e.g. Lisp, Prolog</li>
+                <li class="fragment"> Runtime via API e.g. OCaml, Scala, Swift, Rust etc.</li>
+                <li class="fragment" style="color: indianred"> Java Annotation Processing (JSR 269)?</li>
+            </ul>
+        </section>
+
+        <section>
+            <h4> What about Rust? </h4>
+
+            <ul style="list-style: none;">
+                <li class="fragment"><b>Declarative Macros</b> <br> Syntax extension with rewriting rules</li>
+                <br>
+                <li class="fragment"><b>Procedural Macros</b> <br> Syntax extensions as execution of a function</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3> Macros by Example </h3>
+
+            <p class="fragment"> Language extension proposition: <b>Comprehension</b>.</p>
+        </section>
+
+        <section>
+            <h3> Comprehension </h3>
+            <ul>
+                <li class="fragment"> Syntactic construction following the form of the mathematical set-builder notation
+                    <br/>
+                    <pre><code class="fragment language-scala" data-noescape>  P = { (x,y) | x ∈ [1,3], y ∈ [1,a], y ≠ 2 }
+  // P = { (1, 1), (2, 1), (3, 1), (3, 3) } </code></pre>
+                </li>
+                <li class="fragment"> List comprehension generalisation (P. Wadler)
+                    <br>
+                    <b class="fragment"> Scala For Comprehension </b>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Example </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  for a <- 1 to 3
+      b <- 1 to a if b != 2
+      c <- 1 to (a + b)
+      yield (a,b,c)
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+
+
+
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+       ident "<-" expr "yield" expr
+
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+       ident "<-" expr "yield" expr
+     | ident "<-" expr "if" expr "yield" expr
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+       ident "<-" expr "yield" expr
+     | ident "<-" expr "if" expr "yield" expr
+     | ident "<-" expr "if" expr comprehension
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+       ident "<-" expr "yield" expr
+     | ident "<-" expr "if" expr "yield" expr
+     | ident "<-" expr "if" expr comprehension
+     | ident "<-" expr comprehension
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Transpilation </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  for a <- 1 to 3
+      b <- 1 to a if b != 2
+      yield (a,b)
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Transpilation </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  (1 to 3).flatMap(a =>
+    for b <- 1 to a if b != 2
+        yield (a,b))
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Transpilation </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  (1 to 3).flatMap(a =>
+    (1 to a).withFilter(_ != 2).map(b =>
+        (a,b)))
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Transpilation Sketch </h4>
+
+            <pre><code class="language-ebnf" data-noescape>
+  comprehension ::=
+       i:ident "<-" e:expr "yield" r:expr =>
+       { e.map(i => r) }
+
+     | i:ident "<-" e:expr "if" c:expr "yield" r:expr =>
+       { e.withFilter(i => c).map(i => r) }
+
+     | i:ident "<-" e:expr "if" c:expr r:comprehension =>
+       { e.withFilter(i => c).flatMap(i => r) }
+
+     | i:ident "<-" e:expr c:comprehension =>
+       { e.flatMap(i => c) }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3> For Comprehension <br><b>with Declarative Macros</b></h3>
+        </section>
+
+        <section>
+            <h4> Declarative Macro Anatomy </h4>
+
+            <pre><code class="language-rust" data-noescape>
+
+
+
+
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Declarative Macro Anatomy </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  #[macro_export]
+  macro_rules! macro_name { // Cannot by a keyword
+
+
+
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Declarative Macro Anatomy </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  #[macro_export]
+  macro_rules! macro_name {
+    pattern_with_bindings_1 => {{ production_rule_1 }};
+
+
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Declarative Macro Anatomy </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  #[macro_export]
+  macro_rules! macro_name {
+    pattern_with_bindings_1 => {{ production_rule_1 }};
+    pattern_with_bindings_2 => {{ production_rule_2 }};
+    ...
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Declarative Macro Physiology </h4>
+
+            <ul style="list-style-type:none">
+                <li class="fragment"> Resolution similar to the pattern matching</li>
+                <li class="fragment" style="font-size: smaller">&nbsp;&nbsp; Find first successful pattern and apply
+                    production rule
+                </li>
+                <br/>
+                <li class="fragment"><b>Recursive definition is allowed</b></li>
+            </ul>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+
+            <pre><code class="language-rust" data-noescape>macro_rules! for {
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     // i:ident "<-" e:expr "yield" r:expr =>
+     // { e.map(i => r) }
+
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+     // { e.map(i => r) }
+     }}
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }}
+
+
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     // i:ident "<-" e:expr "if" c:expr "yield" r:expr =>
+     // { e.withFilter(i => c).map(i => r) }
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+     // { e.withFilter(i => c).map(i => r) }
+     }};
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }}
+
+
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     // i:ident "<-" e:expr "if" c:expr r:comprehension =>
+     // { e.withFilter(i => c).flatMap(i => r) }
+
+
+
+
+
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+     // { e.withFilter(i => c).flatMap(i => r) }
+
+     }}
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&i| $c)
+          .flap_map(move |i| foreach!($($r)+))
+     }}
+
+
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&i| $c)
+          .flap_map(move |i| foreach!($($r)+))
+     }};
+     // i:ident "<-" e:expr r:comprehension =>
+     // { flatMap(i => r) }
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&i| $c)
+          .flap_map(move |i| foreach!($($r)+))
+     }};
+     (i:ident <- ($e:expr) $($r:tt)+) => {{
+     // => { flatMap(i => r) }
+     }}
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&i| $c)
+          .flap_map(move |i| foreach!($($r)+))
+     }};
+     (i:ident <- ($e:expr) $($r:tt)+) => {{
+        $e.flat_map(move |i| foreach!($($r)+))
+     }};
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension </h4>
+
+            <pre><code class="language-rust" data-noescape>macro_rules! foreach {
+     (i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&i| $c).map(move |i| $r)
+     }};
+     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&i| $c)
+          .map(move |i| foreach!($($r)+)).flatten()
+     }};
+     (i:ident <- ($e:expr) $($r:tt)+) => {{
+        $e.map(move |i| foreach!($($r)+)).flatten()
+     }};
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Vec&lt;_> =
+    foreach!(
+      a <- (1..=3)
+      b <- (1..=a) if (b != 2)
+      yield (a,b)
+    )
+    .collect();
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Vec&lt;_> =
+
+      (1..=3).flat_map(move |a|
+        foreach!(b <- (1..=a) if (b != 2)
+                 yield (a,b)))
+
+    .collect();
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Vec&lt;_> =
+
+      (1..=3).map(move |a|
+        foreach!(b <- (1..=a) if (b != 2)
+                 yield (a,b))).flatten()
+
+    .collect();
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Vec&lt;_> =
+
+      (1..=3).map(move |a|
+        (1..=a).filter(move |&b| b != 2)
+               .map(move |b|(a,b))).flatten()
+
+    .collect();
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Option&lt;i32> =
+    foreach!(
+      a <- (Some(1))
+      b <- (Some(2))
+      c <- (Some(3))
+      yield a + b + c
+    );
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Result&lt;i32, ()> =
+    foreach!(
+      a <- (Ok(1))
+      b <- (Ok(2))
+      c <- (Ok(3))
+      yield a + b + c
+    );
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Declarative Macros limitations </h4>
+        </section>
+
+        <section>
+            <h3> For Comprehension <br><b>with Procedural Macros</b></h3>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+       ident "<-" expr "yield" expr
+     | ident "<-" expr "if" expr "yield" expr
+     | ident "<-" expr "if" expr comprehension
+     | ident "<-" expr comprehension
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+       ident "<-" expr ("if" expr)? "yield" expr
+
+     | ident "<-" expr ("if" expr)? comprehension
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Syntax </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  expr ::=
+     ...
+     | "for" comprehension
+
+  comprehension ::=
+     ident "<-" expr ("if" expr)? ("yield" expr | comprehension)
+
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Procedural Macro Anatomy </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  #[proc_macro]
+  pub fn foreach(input: TokenStream) -> TokenStream {
+      todo!()
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Procedural Macro Physiology </h4>
+
+            <ul>
+                <li><b>Syn</b> library <br/>
+                    Library for parsing a stream of tokens into a syntax tree
+                </li>
+                <br/>
+                <li><b>Quote</b> library <br/>
+                    Macro for turning syntax tree into tokens stream
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  let r : Result&lt;i32, ()> =
+    foreach!(
+      a <- Ok(1)
+      b <- Ok(2) if a != 1
+      c <- Ok(3)
+      yield a + b + c
+    );
+            </code></pre>
+        </section>
+
+        <section>
+            <h3> Experiment <br/><b>the Celma Project</b></h3>
+        </section>
+
+        <section>
+            <h4> Celma JSON parser</h4>
+            <pre><code class="language-rust" data-noescape>
+ parsec_rules!(
+  let json    = S (string|null|boolean|array|object|number) S
+  let number  = NUMBER                                  -> {}
+  let string  = STRING                                  -> {}
+  let null    = "null"                                  -> {}
+  let boolean = ("true"|"false")                        -> {}
+  let array   = ('[' S (_=json (',' _=json)*)? ']')     -> {}
+  let object  = ('{' S (_=attr (',' _=attr)*)? '}')     -> {}
+  let attr    = (S STRING S ":" json)                   -> {}
+ );
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Regressio ad infinitum </h4>
+
+            <img width="30%" src="images/Muenchhausen_Herrfurth_7_500x789.jpg" alt="Muenchhausen_Herrfurth_7_500x789">
+
+        </section>
+
+        <section>
+            <h4> Bootstrap </h4>
+
+            <img width="30%" src="images/Muenchhausen_Herrfurth_7_500x789.jpg" alt="Muenchhausen_Herrfurth_7_500x789">
+
+        </section>
+
+        <section>
+            <h4> Celma in Celma </h4>
+            <pre><code class="language-rust" data-noescape>
+ parsec_rules!(
+  ...
+
+  let rules:{Vec&lt;ASTParsecRule&lt;char>>} = rule*
+
+  let rule:{ASTParsecRule&lt;char>} =
+    "let" n=ident i=kind? o=(':' _=kind)? '=' b=parsec
+    -> { mk_rule(n, i, o, b) }
+
+  ...
+ );
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> References </h4>
+
+            <ul>
+                <li style="font-size: smaller"><a href="https://ncatlab.org/nlab/files/WadlerMonads.pdf"> Comprehending
+                    Monads </a></li>
+                <li style="font-size: smaller"><a
+                        href="https://pdf.sciencedirectassets.com/271600/1-s2.0-S0167642310X00028/1-s2.0-S0167642309001294/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEA4aCXVzLWVhc3QtMSJHMEUCIBETXi6bQNgYe5X3ig%2B%2BUVizg4c0BotfKPuK3oM1PYwJAiEAzLXf136nCs01%2FlhZ7z5hRsvM8vp3SdWd5DBCzZnHTKMqvAUI5v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAFGgwwNTkwMDM1NDY4NjUiDJS8l0rAQApG4GVt7CqQBbhHWCCBVQI1%2BOvZ0aWCgC6%2FhfQ2t3bK6L2ow7tvwYGlQdtw%2BZlmqPNeWPoZ0u6tIhRXBsxksVmoh2fxTJt5rdaQC9IBbN3Be%2FeWUS5HckiMJnbGAPZl4ma2LLwnpZo%2FB8C1xRocUZU1%2FNmZNbsuq%2Fhh9DDr9SYZMmkbWri%2BgvPbeftuEeSvlshWyIhi4dGUJzqJqxbYxfnryyF2QnNoqm2P5L8aRvKWskHalDvqNbQ0Xpw9vJru1evokCtcydk50TJt7BJaPoL1%2FpmhIWLaIeNx5Riq1e5JWYiyi1ywKF6hWvhDouYZnUIbZ9JKgBrz%2B049pjHlb0xIGc5dfbzAiUMVA1zMEJCKddA4sTGW6FoCDkGl%2BvISxeo8OOP5X2K8gLEoBUNqt5gjERA4D1e6vcVNlNMbwmA5vogNGhk59djFzRB%2FGwH%2Bv3CfCdz0Dy4NhVcd7oIvHrM5i6dj%2BAwx1YmIoCMcjcGpXenetgfHd5HENUKH%2FhnmKmgd2uKxPZAKtecP6OrFWGWjOdS4jBl6mv5Ga3VEkLxKRFbCioxZh5iX2Gs%2B0kwCetBE8LR3An%2Bm8G4W%2FUZAYNJpbb6eKs1x0TSi%2FYliHNW5VVkToJ08ICR%2FmtrAdDTZBMfHH6KwC0gXsKcAdzBFvDvzb7Jef3BE63dUD7EK%2BBhKJDqKYbFGoTNqlNLP3wROlMgRBO%2FiLZQex0lgxqYcrf31Aei3YlJxP09yL9GDHYjbkl2vJtBdbsEvaWQNzOMH%2B9X2bsZ%2BJiBKE4EgcscICMhy9Jj08Uqqk7tAPk%2F4EjItPEmaL7QI5uWRruWA54fEj5gt5QTmgiAGg4BxzwwiOvqDlrwBkOlmLv37x29yAUFrV%2BUEDagAls1CMObEqcIGOrEBWuxYIxQx44lmDKp03NnYSxV4JmWu1YxnlonxI3BjCXogIXw1sGvIkK%2FYoY%2FtUFurQz1e6ncxd4Gi%2Fr7EKSGwghmIZaA7ORRI2a2R%2BThfpfjJMWmqAmjjUvv%2BnqIglGoPfa3w3qmiSeXF4BgkzjT2qOjn%2BO0RHzK97P%2FJ55bOM3BT67P47q3iKBVburO16zBVCytwgxlCOasKxqtkoeVOpwK%2FFbV1r5sIIykig%2Bt3AXGs&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250612T063503Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYX2KOT6PA%2F20250612%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=88a296a987657c280170d5d3b45de2f9e86216eaa4c04253c95cd5cf4eea2e32&hash=1875c6405298fcf77c5cb782a1d8491924a6b440d0935c99b0cafaa97a965ae8&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0167642309001294&tid=spdf-e0f7204b-0f22-462c-9ed8-7a50c34a9a59&sid=ddbb6ef365090044a908922782d36b07ca2cgxrqb&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=1c1758520b5653525957&rr=94e753734af86cc8&cc=fr">
+                    Theory and Practice of Unparsed Patterns for Metacompilation </a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <br/>
+            <h2>Thank you 🤗</h2>
+        </section>
+
+    </div>
+
+</div>
+
+<script src="revealjs/dist/reveal.js"></script>
+<script src="revealjs/plugin/zoom/zoom.js"></script>
+<script src="revealjs/plugin/notes/notes.js"></script>
+<script src="revealjs/plugin/search/search.js"></script>
+<script src="revealjs/plugin/markdown/markdown.js"></script>
+<script src="revealjs/plugin/highlight/highlight.js"></script>
+
+<script>
+    // Also available as an ES module, see:
+    // https://revealjs.com/initialization/
+    Reveal.initialize({
+        controls: false,
+        progress: false,
+        center: true,
+        hash: true,
+        transition: 'none',
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight]
+    });
+
+    nethra(RevealHighlight);
+</script>
+
+</body>
+</html>
