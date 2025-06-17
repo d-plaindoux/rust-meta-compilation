@@ -6,7 +6,7 @@ pub mod procedural_foreach_tests {
     fn should_perform_lists_foreach_with_filter() {
         let code: Vec<_> = foreach! {
             a <- (1..=3)
-            b <- (1..=a) if (b != 2)
+            b <- (1..=a) if b != 2
             yield (a,b)
         }
         .collect();
@@ -18,7 +18,7 @@ pub mod procedural_foreach_tests {
     pub fn should_perform_option_foreach() {
         let r: Option<i32> = foreach! {
             a <- Some(1)
-            b <- None::<i32>
+            b <- Some(2) if b != 2
             c <- Some(3)
             yield a + b + c
         };
@@ -26,3 +26,4 @@ pub mod procedural_foreach_tests {
         assert_eq!(r, None)
     }
 }
+

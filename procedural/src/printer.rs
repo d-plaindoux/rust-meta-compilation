@@ -15,11 +15,11 @@ impl quote::ToTokens for ForEach {
                 condition,
                 result,
             } => {
-                if condition.is_some() {
+                if condition.is_none() {
+                    quote!(#value.map(move |#ident| #result))
+                } else {
                     let cond = condition.as_ref().unwrap();
                     quote!(#value.filter(move |&#ident| #cond).map(move |#ident| #result))
-                } else {
-                    quote!(#value.map(move |#ident| #result))
                 }
             }
             ForEach::ChainedMapping {
@@ -30,11 +30,11 @@ impl quote::ToTokens for ForEach {
             } => {
                 let next = next.to_token_stream();
 
-                if condition.is_some() {
+                if condition.is_none() {
+                    quote!(#value.map(move |#ident| #next).flatten())
+                } else {
                     let cond = condition.as_ref().unwrap();
                     quote!(#value.filter(move |&#ident| #cond).map(move |#ident| #next).flatten())
-                } else {
-                    quote!(#value.map(move |#ident| #next).flatten())
                 }
             }
         }
