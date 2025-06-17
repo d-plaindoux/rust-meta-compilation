@@ -5,10 +5,10 @@
 // comprehension ::=
 //   ident "<-" expr ("if" expr)? ("yield" expr | comprehension)
 
-use crate::data::ForEach;
+use crate::data::Comprehension;
 use syn::parse::ParseStream;
 
-impl syn::parse::Parse for ForEach {
+impl syn::parse::Parse for Comprehension {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let ident = input.parse::<syn::Ident>()?;
         let _ = input.parse::<syn::Token![<-]>()?;
@@ -25,7 +25,7 @@ impl syn::parse::Parse for ForEach {
             let _ = input.parse::<syn::Token![yield]>()?;
             let result = input.parse::<syn::Expr>()?;
 
-            Ok(ForEach::MappingAndYield {
+            Ok(Comprehension::MappingAndYield {
                 ident,
                 value,
                 condition,
@@ -34,7 +34,7 @@ impl syn::parse::Parse for ForEach {
         } else {
             let next = Box::new(input.parse()?);
 
-            Ok(ForEach::ChainedMapping {
+            Ok(Comprehension::ChainedMapping {
                 ident,
                 value,
                 condition,

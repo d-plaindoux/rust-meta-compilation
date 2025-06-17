@@ -1,4 +1,4 @@
-pub enum ForEach {
+pub enum Comprehension {
     MappingAndYield {
         ident: syn::Ident,
         value: syn::Expr,
@@ -9,6 +9,6 @@ pub enum ForEach {
         ident: syn::Ident,
         value: syn::Expr,
         condition: Option<syn::Expr>,
-        next: Box<ForEach>,
+        next: Box<Comprehension>,
     },
 }

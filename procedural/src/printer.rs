@@ -1,15 +1,15 @@
-use crate::data::ForEach;
+use crate::data::Comprehension;
 use proc_macro2::TokenStream;
 use quote::quote;
 
-impl quote::ToTokens for ForEach {
+impl quote::ToTokens for Comprehension {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.extend(self.to_token_stream())
     }
 
     fn to_token_stream(&self) -> TokenStream {
         match self {
-            ForEach::MappingAndYield {
+            Comprehension::MappingAndYield {
                 ident,
                 value,
                 condition,
@@ -22,7 +22,7 @@ impl quote::ToTokens for ForEach {
                     quote!(#value.filter(move |&#ident| #cond).map(move |#ident| #result))
                 }
             }
-            ForEach::ChainedMapping {
+            Comprehension::ChainedMapping {
                 ident,
                 value,
                 condition,

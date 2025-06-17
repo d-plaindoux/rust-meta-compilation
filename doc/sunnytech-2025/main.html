@@ -707,11 +707,11 @@
 
             <pre><code class="language-rust" data-noescape>
   let r : Vec&lt;_> =
-    foreach!(
+    foreach! {
       a <- (1..=3)
       b <- (1..=a) if (b != 2)
       yield (a,b)
-    )
+    }
     .collect();
             </code></pre>
         </section>
@@ -723,8 +723,8 @@
   let r : Vec&lt;_> =
 
       (1..=3).flat_map(move |a|
-        foreach!(b <- (1..=a) if (b != 2)
-                 yield (a,b)))
+        foreach! { b <- (1..=a) if (b != 2)
+                 yield (a,b) })
 
     .collect();
             </code></pre>
@@ -737,8 +737,8 @@
   let r : Vec&lt;_> =
 
       (1..=3).map(move |a|
-        foreach!(b <- (1..=a) if (b != 2)
-                 yield (a,b))).flatten()
+        foreach! { b <- (1..=a) if (b != 2)
+                 yield (a,b) }).flatten()
 
     .collect();
             </code></pre>
@@ -763,12 +763,12 @@
 
             <pre><code class="language-rust" data-noescape>
   let r : Option&lt;i32> =
-    foreach!(
+    foreach! {
       a <- (Some(1))
       b <- (Some(2)) if (b != 2)
       c <- (Some(3))
       yield a + b + c
-    );
+    };
             </code></pre>
         </section>
 
@@ -777,12 +777,12 @@
 
             <pre><code class="language-rust" data-noescape>
   let r : Result&lt;i32, ()> =
-    foreach!(
+    foreach! {
       a <- (Ok(1))
       b <- (Ok(2))
       c <- (Ok(3))
       yield a + b + c
-    );
+    };
             </code></pre>
         </section>
 
@@ -846,13 +846,14 @@
             <h4> Scala For Comprehension Procedural Macro </h4>
 
             <ul style="list-style-type:decimal">
-                <li class="fragment"> Design the Abstract Syntax Tree aka <b>AST</b> </li>
+                <li class="fragment"> Design the Abstract Syntax Tree aka <b>AST</b></li>
                 <li class="fragment"><b>syn::parse::Parse</b> implementation for this Syntax Tree</li>
                 <li class="fragment"><b>quote::ToTokens</b> implementation for this Syntax Tree</li>
             </ul>
             <br/>
             <br/>
-            <span style="font-size: smaller" class="fragment"><b> TokenStream -{Parse}-> AST -{ToTokens}-> TokenStream </b></span>
+            <span style="font-size: smaller"
+                  class="fragment"><b> TokenStream -{Parse}-> AST -{ToTokens}-> TokenStream </b></span>
         </section>
 
         <section>
@@ -907,7 +908,7 @@
             <h4> Scala For Comprehension Syntax Tree </h4>
 
             <pre><code class="language-rust">
-pub enum ForEach {
+pub enum Comprehension {
     // ident <- value (if condition)? yield result
     MappingAndYield {
         ident: syn::Ident,
@@ -925,15 +926,87 @@ pub enum ForEach {
             <h4> Scala For Comprehension Parser </h4>
 
             <pre><code class="language-rust">
-  impl syn::parse::Parse for ForEach {
+  impl syn::parse::Parse for Comprehension {
 
+    //
+    fn parse(input: ParseStream) -> syn::Result&lt;Self> {
+
+
+
+
+      ...
+    }
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Parser </h4>
+
+            <pre><code class="language-rust">
+  impl syn::parse::Parse for Comprehension {
+
+    // ident ...
+    fn parse(input: ParseStream) -> syn::Result&lt;Self> {
+      let ident = input.parse::&lt;syn::Ident>()?;
+
+
+
+      ...
+    }
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Parser </h4>
+
+            <pre><code class="language-rust">
+  impl syn::parse::Parse for Comprehension {
+
+    // ident "<-" ...
+    fn parse(input: ParseStream) -> syn::Result&lt;Self> {
+      let ident = input.parse::&lt;syn::Ident>()?;
+      let _ = input.parse::&lt;syn::Token![<-]>()?;
+
+
+      ...
+    }
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Parser </h4>
+
+            <pre><code class="language-rust">
+  impl syn::parse::Parse for Comprehension {
+
+    // ident "<-" expr ...
     fn parse(input: ParseStream) -> syn::Result&lt;Self> {
       let ident = input.parse::&lt;syn::Ident>()?;
       let _ = input.parse::&lt;syn::Token![<-]>()?;
       let value = input.parse::&lt;syn::Expr>()?;
+
       ...
     }
+  }
+            </code></pre>
+        </section>
+        <section>
+            <h4> Scala For Comprehension Parser </h4>
 
+            <pre><code class="language-rust">
+  impl syn::parse::Parse for Comprehension {
+
+    // ident "<-" expr ("if" ...)? ...
+    fn parse(input: ParseStream) -> syn::Result&lt;Self> {
+      let ident = input.parse::&lt;syn::Ident>()?;
+      let _ = input.parse::&lt;syn::Token![<-]>()?;
+      let value = input.parse::&lt;syn::Expr>()?;
+      let cond = if input.lookahead1().peek(syn::Token![if]) ...
+      ...
+    }
   }
             </code></pre>
         </section>
@@ -942,14 +1015,14 @@ pub enum ForEach {
             <h4> Scala For Comprehension ToTokens </h4>
 
             <pre><code class="language-rust">
-  impl quote::ToTokens for ForEach {
+  impl quote::ToTokens for Comprehension {
     fn to_tokens(&self, tokens: &mut TokenStream) {
       tokens.extend(self.to_token_stream())
     }
 
     fn to_token_stream(&self) -> TokenStream {
       match self {
-        ForEach::MappingAndYield {
+        Comprehension::MappingAndYield {
           ident, value, condition, result,
         } => {
           if condition.is_none() {
@@ -976,12 +1049,12 @@ pub enum ForEach {
 
             <pre><code class="language-rust" data-noescape>
   let r : Result&lt;i32, ()> =
-    foreach!(
+    foreach! {
       a <- Ok(1)
       b <- Ok(2) if a != 1
       c <- Ok(3)
       yield a + b + c
-    );
+    };
             </code></pre>
         </section>
 
@@ -998,16 +1071,16 @@ pub enum ForEach {
         <section>
             <h4> Celma Parser </h4>
             <pre><code class="language-rust" data-noescape>
- parsec_rules!(
-  let json    = S (string|null|boolean|array|object|number) S
-  let number  = NUMBER                                  -> {}
-  let string  = STRING                                  -> {}
-  let null    = "null"                                  -> {}
-  let boolean = ("true"|"false")                        -> {}
-  let array   = ('[' S (_=json (',' _=json)*)? ']')     -> {}
-  let object  = ('{' S (_=attr (',' _=attr)*)? '}')     -> {}
-  let attr    = (S STRING S ":" json)                   -> {}
- );
+  parsec_rules! {
+    let json    = (string|null|boolean|array|object|number)
+    let number  = NUMBER                              -> {}
+    let string  = STRING                              -> {}
+    let null    = "null"                              -> {}
+    let boolean = ("true"|"false")                    -> {}
+    let array   = ('[' (_=json (',' _=json)*)? ']')   -> {}
+    let object  = ('{' (_=attr (',' _=attr)*)? '}')   -> {}
+    let attr    = (STRING ":" json)                   -> {}
+  };
             </code></pre>
         </section>
 
@@ -1028,16 +1101,52 @@ pub enum ForEach {
         <section>
             <h4> Celma in Celma </h4>
             <pre><code class="language-rust" data-noescape>
- parsec_rules!(
-  ...
+  parsec_rules! {
+    ...
 
-  let rule:{ASTParsecRule&lt;char>} =
-    "let" n=ident i=kind? o=(':' _=kind)? '=' b=parsec
-    -> { mk_rule(n, i, o, b) }
+    let rule:{ASTParsecRule&lt;char>} =
 
-  ...
- );
+
+
+    ...
+  };
             </code></pre>
+        </section>
+
+        <section>
+            <h4> Celma in Celma </h4>
+            <pre><code class="language-rust" data-noescape>
+  parsec_rules! {
+    ...
+
+    let rule:{ASTParsecRule&lt;char>} =
+      "let" n=ident i=kind? o=(':' _=kind)? '=' b=parsec
+      -> { mk_rule(n, i, o, b) }
+
+    ...
+  };
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Celma in Celma Perspective </h4>
+
+            <ul style="list-style-type:none">
+                <li> Capability to manipulate parser at the compile time!</li>
+                <br>
+                <li class="fragment"><a href="https://www.cl.cam.ac.uk/~jdy22/papers/a-typed-algebraic-approach-to-parsing.pdf">
+                    A Typed Algebric Approach to Parsing</a>
+                    <br>
+                    Neelakantan R. Krishnaswami and Jeremy Yallop
+                </li>
+                <br>
+                <li class="fragment"><a href="https://www.cl.cam.ac.uk/~nk480/flap.pdf">
+                    flap: A Deterministic Parser with Fused Lexing</a>
+                    <br>
+                    Jeremy Yallop, Ningning Xie and Neel Krishnaswami
+                </li>
+            </ul>
+
         </section>
 
         <section>
