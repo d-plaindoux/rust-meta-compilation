@@ -832,12 +832,12 @@
             <h4> Procedural Macro Physiology </h4>
 
             <ul style="list-style-type:none">
-                <li><b>Syn</b> <br/>
+                <li class="fragment"><b>Syn</b> <br/>
                     Library for parsing a stream of tokens into a syntax tree
                 </li>
                 <br/>
-                <li><b>Quote</b> <br/>
-                    Macro for turning syntax tree into tokens stream
+                <li class="fragment"><b>Quote</b> <br/>
+                    Macro for turning syntax tree into a stream of tokens
                 </li>
             </ul>
         </section>
@@ -853,7 +853,11 @@
             <br/>
             <br/>
             <span style="font-size: smaller"
-                  class="fragment"><b> TokenStream -{Parse}-> AST -{ToTokens}-> TokenStream </b></span>
+                  class="fragment"><b>TokenStream</b>
+                <span class="fragment">-{Parse}-></span>
+                <b class="fragment">AST</b>
+                <span class="fragment">-{ToTokens}-></span>
+                <b class="fragment">TokenStream</b></span>
         </section>
 
         <section>
@@ -1038,7 +1042,31 @@ pub enum Comprehension {
             <pre><code class="language-rust" data-noescape>
   #[proc_macro]
   pub fn foreach(input: TokenStream) -> TokenStream {
-    let c = parse_macro_input!(input as ForEach);
+
+
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Procedural Macro </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  #[proc_macro]
+  pub fn foreach(input: TokenStream) -> TokenStream {
+    let c = parse_macro_input!(input as Comprehension);
+
+  }
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Procedural Macro </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  #[proc_macro]
+  pub fn foreach(input: TokenStream) -> TokenStream {
+    let c = parse_macro_input!(input as Comprehension);
     quote! { #c }.into()
   }
             </code></pre>
@@ -1131,31 +1159,32 @@ pub enum Comprehension {
         <section>
             <h4> Celma in Celma Perspective </h4>
 
-            <ul style="list-style-type:none">
-                <li> Capability to manipulate parser at the compile time!</li>
-                <br>
-                <li class="fragment"><a href="https://www.cl.cam.ac.uk/~jdy22/papers/a-typed-algebraic-approach-to-parsing.pdf">
-                    A Typed Algebric Approach to Parsing</a>
-                    <br>
-                    Neelakantan R. Krishnaswami and Jeremy Yallop
+            <p> Capability to manipulate parser at the compile time!</p>
+
+            <ul style="list-style-type:decimal">
+                <li class="fragment"> Generation of "Classical" Parser Combinator
                 </li>
-                <br>
-                <li class="fragment"><a href="https://www.cl.cam.ac.uk/~nk480/flap.pdf">
+                <li class="fragment"> Generation of Optimised Parser from the AST
+                </li>
+                <br/>
+            </ul>
+
+            <p class="fragment">
+                <a href="https://www.cl.cam.ac.uk/~nk480/flap.pdf">
                     flap: A Deterministic Parser with Fused Lexing</a>
                     <br>
                     Jeremy Yallop, Ningning Xie and Neel Krishnaswami
-                </li>
-            </ul>
+            </p>
 
         </section>
 
         <section>
-            <h4> References </h4>
+            <h4> Rust References </h4>
 
             <ul style="list-style-type:none">
-                <li><a href=""> Syn Crate </a></li>
-                <li><a href=""> Quote Crate </a></li>
-                <li><a href=""> Celma Parser </a></li>
+                <li><a href="https://crates.io/crates/syn"> Syn Crate </a> Parser for Rust source code </li>
+                <li><a href="https://crates.io/crates/quote"> Quote Crate </a> Rust Quasi-Quoting </li>
+                <li><a href="https://www.mn.uio.no/ifi/english/research/groups/psy/completedmasters/2020/gaarde/masterthesis-gaarde.pdf"> Compile Time Reflection in Rust (Thesis) </a></li>
             </ul>
         </section>
 
@@ -1179,15 +1208,11 @@ pub enum Comprehension {
 
         <section>
             <br/>
-            <h2>Thank you 🤗</h2>
+            <h2>Metacompilation in Rust</h2>
 
             <img width="200" src="images/qrcode.png" alt="qrcode"/>
-        </section>
 
-        <section>
-            <ul>
-                <li><a href="https://qrfy.com"> QRCode generator </a></li>
-            </ul>
+            <h4> Didier Plaindoux </h4>
         </section>
 
     </div>
