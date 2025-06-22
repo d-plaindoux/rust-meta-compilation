@@ -108,7 +108,7 @@
             <ul>
                 <li class="fragment"> Syntactic construction following the form of the mathematical set-builder notation
                     <br/>
-                    <pre><code class="fragment language-scala" data-noescape>  P = { (x,y) | x ∈ [1,3], y ∈ [1,a], y ≠ 2 }
+                    <pre><code class="fragment language-scala" data-noescape>  P = { (x,y) | x ∈ [1,3], y ∈ [1,x], y ≠ 2 }
   // P = { (1, 1), (2, 1), (3, 1), (3, 3) } </code></pre>
                 </li>
                 <li class="fragment"> List comprehension generalisation (P. Wadler)
@@ -122,10 +122,49 @@
             <h4> Scala For Comprehension Example </h4>
 
             <pre><code class="language-scala" data-noescape>
+
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Example </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  for
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Example </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  for a <- 1 to 3
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Example </h4>
+
+            <pre><code class="language-scala" data-noescape>
   for a <- 1 to 3
       b <- 1 to a if b != 2
-      c <- 1 to (a + b)
-      yield (a,b,c)
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Example </h4>
+
+            <pre><code class="language-scala" data-noescape>
+  for a <- 1 to 3
+      b <- 1 to a if b != 2
+      yield (a,b)
             </code></pre>
         </section>
 
@@ -375,17 +414,16 @@
             <h4> Declarative Macro Physiology </h4>
 
             <ul style="list-style-type:none">
-                <li class="fragment"><b>Resolution similar to the pattern matching</b></li>
-                <li class="fragment" style="font-size: inherit">Find first successful pattern and apply
-                    production rule
+                <li class="fragment"><b>Similar resolution to pattern matching</b></li>
+                <li class="fragment" style="font-size: inherit">Find first successful pattern and apply production rule
                 </li>
                 <br/>
-                <li class="fragment"><b>Recursive definition is allowed</b></li>
+                <li class="fragment"><b>Recursive definitions are allowed</b></li>
             </ul>
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! for {
 
@@ -406,7 +444,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
 
@@ -427,7 +465,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      // i:ident "<-" e:expr "yield" r:expr =>
@@ -448,7 +486,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
      // { e.map(i => r) }
@@ -468,7 +506,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -490,7 +528,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -512,7 +550,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -535,7 +573,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -558,7 +596,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -581,7 +619,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -601,7 +639,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -621,7 +659,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -641,7 +679,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
         $e.map(move |i| $r)
@@ -661,7 +699,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
@@ -682,7 +720,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Declarative Macro </h4>
+            <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
      (i:ident <- ($e:expr) yield $r:expr) => {{
@@ -703,7 +741,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Vec&lt;_> =
@@ -717,7 +755,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Vec&lt;_> =
@@ -731,7 +769,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Vec&lt;_> =
@@ -745,7 +783,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Vec&lt;_> =
@@ -759,7 +797,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Option&lt;i32> =
@@ -773,7 +811,7 @@
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Result&lt;i32, ()> =
@@ -832,18 +870,18 @@
             <h4> Procedural Macro Physiology </h4>
 
             <ul style="list-style-type:none">
-                <li class="fragment"><b>Syn</b> <br/>
-                    Library for parsing a stream of tokens into a syntax tree
+                <li class="fragment"><b>Syn</b> library <br/>
+                    For parsing a stream of tokens into a syntax tree
                 </li>
                 <br/>
-                <li class="fragment"><b>Quote</b> <br/>
-                    Macro for turning syntax tree into a stream of tokens
+                <li class="fragment"><b>Quote</b> macro <br/>
+                    For turning syntax tree into a stream of tokens
                 </li>
             </ul>
         </section>
 
         <section>
-            <h4> Scala For Comprehension Procedural Macro </h4>
+            <h4> For Comprehension Procedural Macro </h4>
 
             <ul style="list-style-type:decimal">
                 <li class="fragment"> Design the Abstract Syntax Tree aka <b>AST</b></li>
@@ -861,7 +899,7 @@
         </section>
 
         <section>
-            <h4> Scala For Comprehension Syntax </h4>
+            <h4> For Comprehension Syntax </h4>
 
             <pre><code class="language-scala" data-noescape>
   expr ::=
@@ -877,7 +915,7 @@
         </section>
 
         <section>
-            <h4> Scala For Comprehension Syntax </h4>
+            <h4> For Comprehension Syntax </h4>
 
             <pre><code class="language-scala" data-noescape>
   expr ::=
@@ -893,7 +931,7 @@
         </section>
 
         <section>
-            <h4> Scala For Comprehension Syntax </h4>
+            <h4> For Comprehension Syntax </h4>
 
             <pre><code class="language-scala" data-noescape>
   expr ::=
@@ -909,7 +947,7 @@
         </section>
 
         <section>
-            <h4> Scala For Comprehension Syntax Tree </h4>
+            <h4> For Comprehension Syntax Tree </h4>
 
             <pre><code class="language-rust">
 pub enum Comprehension {
@@ -927,7 +965,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Scala For Comprehension Parser </h4>
+            <h4> For Comprehension Parser </h4>
 
             <pre><code class="language-rust">
   impl syn::parse::Parse for Comprehension {
@@ -945,7 +983,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Scala For Comprehension Parser </h4>
+            <h4> For Comprehension Parser </h4>
 
             <pre><code class="language-rust">
   impl syn::parse::Parse for Comprehension {
@@ -963,7 +1001,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Scala For Comprehension Parser </h4>
+            <h4> For Comprehension Parser </h4>
 
             <pre><code class="language-rust">
   impl syn::parse::Parse for Comprehension {
@@ -981,7 +1019,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Scala For Comprehension Parser </h4>
+            <h4> For Comprehension Parser </h4>
 
             <pre><code class="language-rust">
   impl syn::parse::Parse for Comprehension {
@@ -998,7 +1036,7 @@ pub enum Comprehension {
             </code></pre>
         </section>
         <section>
-            <h4> Scala For Comprehension Parser </h4>
+            <h4> For Comprehension Parser </h4>
 
             <pre><code class="language-rust">
   impl syn::parse::Parse for Comprehension {
@@ -1016,7 +1054,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Scala For Comprehension ToTokens </h4>
+            <h4> For Comprehension ToTokens </h4>
 
             <pre><code class="language-rust">
   impl quote::ToTokens for Comprehension {
@@ -1030,14 +1068,14 @@ pub enum Comprehension {
           ident, value, condition, result,
         } => {
           if condition.is_none() {
-            quote!(#value.map(move |#ident| #result))
+            quote! { #value.map(move |#ident| #result) }
           } else {
             ...
           </code></pre>
         </section>
 
         <section>
-            <h4> Procedural Macro </h4>
+            <h4> For Comprehension Procedural Macro </h4>
 
             <pre><code class="language-rust" data-noescape>
   #[proc_macro]
@@ -1049,7 +1087,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Procedural Macro </h4>
+            <h4> For Comprehension Procedural Macro </h4>
 
             <pre><code class="language-rust" data-noescape>
   #[proc_macro]
@@ -1061,7 +1099,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Procedural Macro </h4>
+            <h4> For Comprehension Procedural Macro </h4>
 
             <pre><code class="language-rust" data-noescape>
   #[proc_macro]
@@ -1073,7 +1111,13 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Scala <b>Like</b> For Comprehension Applied </h4>
+            <h4> Procedural Macro source code </h4>
+
+            <b> Live code analysis </b>
+        </section>
+
+        <section>
+            <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
   let r : Result&lt;i32, ()> =
@@ -1097,7 +1141,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Celma Parser </h4>
+            <h4> A JSON Parser in Celma</h4>
             <pre><code class="language-rust" data-noescape>
   parsec_rules! {
     let json    = (string|null|boolean|array|object|number)
@@ -1127,7 +1171,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Celma in Celma </h4>
+            <h4> A Celma Parser in Celma</h4>
             <pre><code class="language-rust" data-noescape>
   parsec_rules! {
     ...
@@ -1142,7 +1186,7 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Celma in Celma </h4>
+            <h4> A Celma Parser in Celma </h4>
             <pre><code class="language-rust" data-noescape>
   parsec_rules! {
     ...

@@ -5,7 +5,7 @@ use syn::parse_macro_input;
 
 mod data;
 mod parser;
-mod printer;
+mod tokenizer;
 
 #[proc_macro]
 pub fn foreach(input: TokenStream) -> TokenStream {
