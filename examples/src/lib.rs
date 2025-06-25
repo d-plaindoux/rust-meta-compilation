@@ -1,8 +1,10 @@
+
 #[cfg(test)]
 mod code_with_declarative {
     use declarative::foreach;
 
     #[test]
+    #[allow(unused_variables)]
     pub fn should_perform_option_foreach() {
         let r: Option<i32> = foreach! {
             a <- (Some(1))

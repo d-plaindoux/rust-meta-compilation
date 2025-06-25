@@ -1,0 +1,8 @@
+[package]
+name = "rust-meta-compilation"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+declarative = { version = "0.1.0", path = "../declarative" }
+procedural = { version = "0.1.0", path = "../procedural" }

@@ -1,8 +1,12 @@
-[package]
-name = "rust-meta-compilation"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+resolver = "2"
+members = [
+    "declarative",
+    "procedural",
+    "examples"
+]
 
-[dependencies]
-declarative = { path = "declarative" }
-procedural = { path = "procedural" }
+[profile.release]
+lto = "fat"
+codegen-units = 1
+debug = true

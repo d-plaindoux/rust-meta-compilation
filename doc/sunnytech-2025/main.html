@@ -825,30 +825,62 @@
         </section>
 
         <section>
-            <h4> Declarative Macros limitation </h4>
+            <h4> Declarative Macros limitations </h4>
 
             <pre><code class="language-rust" data-noescape>
   ($a:ident <- ($e:expr) yield $result:expr) => {{ ...
 
             </code></pre>
+
+            <ul style="list-style-type:none">
+                <li> &nbsp; </li>
+                <li> &nbsp; </li>
+            </ul>
+
         </section>
 
         <section>
-            <h4> Declarative Macros limitation </h4>
+            <h4> Declarative Macros limitations </h4>
 
             <pre><code class="language-rust" data-noescape>
   ($a:ident <- $e:expr yield $result:expr) => {{ ...
 
             </code></pre>
+
+            <ul style="list-style-type:none">
+                <li> &nbsp; </li>
+                <li> &nbsp; </li>
+            </ul>
+
         </section>
 
         <section>
-            <h4> Declarative Macros limitation </h4>
+            <h4> Declarative Macros limitations </h4>
 
             <pre><code class="language-rust" data-noescape>
   ($a:ident <- $e:expr yield $result:expr) => {{ ...
                        ^^^^^ not allowed after `expr` fragments
             </code></pre>
+
+            <ul style="list-style-type:none">
+                <li> &nbsp; </li>
+                <li> &nbsp; </li>
+            </ul>
+
+        </section>
+
+        <section>
+            <h4> Declarative Macros limitations </h4>
+
+            <pre><code class="language-rust" data-noescape>
+  ($a:ident <- $e:expr yield $result:expr) => {{ ...
+                       ^^^^^ not allowed after `expr` fragments
+            </code></pre>
+
+            <ul style="list-style-type:none">
+                <li> Pattern limitation </li>
+                <li class="fragment"> Direct transformation without manipulation </li>
+            </ul>
         </section>
 
         <section>
@@ -1111,12 +1143,6 @@ pub enum Comprehension {
         </section>
 
         <section>
-            <h4> Procedural Macro source code </h4>
-
-            <b> Live code analysis </b>
-        </section>
-
-        <section>
             <h4> For Comprehension Applied </h4>
 
             <pre><code class="language-rust" data-noescape>
@@ -1216,8 +1242,8 @@ pub enum Comprehension {
             <p class="fragment">
                 <a href="https://www.cl.cam.ac.uk/~nk480/flap.pdf">
                     flap: A Deterministic Parser with Fused Lexing</a>
-                    <br>
-                    Jeremy Yallop, Ningning Xie and Neel Krishnaswami
+                <br>
+                Jeremy Yallop, Ningning Xie and Neel Krishnaswami
             </p>
 
         </section>
@@ -1226,9 +1252,11 @@ pub enum Comprehension {
             <h4> Rust References </h4>
 
             <ul style="list-style-type:none">
-                <li><a href="https://crates.io/crates/syn"> Syn Crate </a> Parser for Rust source code </li>
-                <li><a href="https://crates.io/crates/quote"> Quote Crate </a> Rust Quasi-Quoting </li>
-                <li><a href="https://www.mn.uio.no/ifi/english/research/groups/psy/completedmasters/2020/gaarde/masterthesis-gaarde.pdf"> Compile Time Reflection in Rust (Thesis) </a></li>
+                <li><a href="https://crates.io/crates/syn"> Syn Crate </a> Parser for Rust source code</li>
+                <li><a href="https://crates.io/crates/quote"> Quote Crate </a> Rust Quasi-Quoting</li>
+                <li>
+                    <a href="https://www.mn.uio.no/ifi/english/research/groups/psy/completedmasters/2020/gaarde/masterthesis-gaarde.pdf">
+                        Compile Time Reflection in Rust (Thesis) </a></li>
             </ul>
         </section>
 
