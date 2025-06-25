@@ -5,8 +5,3 @@ members = [
     "procedural",
     "examples"
 ]
-
-[profile.release]
-lto = "fat"
-codegen-units = 1
-debug = true
