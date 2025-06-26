@@ -543,7 +543,7 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
      // { e.map(i => r) }
      }}
 
@@ -563,8 +563,8 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }}
 
 
@@ -585,8 +585,8 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
      // i:ident "<-" e:expr "if" c:expr "yield" r:expr =>
      // { e.withFilter(i => c).map(i => r) }
@@ -607,10 +607,10 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
      // { e.withFilter(i => c).map(i => r) }
      }};
 
@@ -630,11 +630,11 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }}
 
 
@@ -653,11 +653,11 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
      // i:ident "<-" e:expr "if" c:expr r:comprehension =>
      // { e.withFilter(i => c).flatMap(i => r) }
@@ -676,13 +676,13 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
      // { e.withFilter(i => c).flatMap(i => r) }
 
      }}
@@ -696,15 +696,15 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
-        $e.filter(move |&i| $c)
-          .flap_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&$i| $c)
+          .flap_map(move |$i| foreach!($($r)+))
      }}
 
 
@@ -716,15 +716,15 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
-        $e.filter(move |&i| $c)
-          .flap_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&$i| $c)
+          .flap_map(move |$i| foreach!($($r)+))
      }};
      // i:ident "<-" e:expr r:comprehension =>
      // { flatMap(i => r) }
@@ -736,17 +736,17 @@
         <section>
             <h4> For Comprehension Declarative Macro </h4>
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
-        $e.filter(move |&i| $c)
-          .flap_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&$i| $c)
+          .flap_map(move |$i| foreach!($($r)+))
      }};
-     (i:ident <- ($e:expr) $($r:tt)+) => {{
+     ($i:ident <- ($e:expr) $($r:tt)+) => {{
      // { flatMap(i => r) }
      }}
 }
@@ -757,18 +757,18 @@
             <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
-        $e.filter(move |&i| $c)
-          .flap_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&$i| $c)
+          .flap_map(move |$i| foreach!($($r)+))
      }};
-     (i:ident <- ($e:expr) $($r:tt)+) => {{
-        $e.flat_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) $($r:tt)+) => {{
+        $e.flat_map(move |$i| foreach!($($r)+))
      }};
 }
             </code></pre>
@@ -848,18 +848,18 @@
             <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
-        $e.filter(move |&i| $c)
-          .flap_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&$i| $c)
+          .flap_map(move |$i| foreach!($($r)+))
      }};
-     (i:ident <- ($e:expr) $($r:tt)+) => {{
-        $e.flat_map(move |i| foreach!($($r)+))
+     ($i:ident <- ($e:expr) $($r:tt)+) => {{
+        $e.flat_map(move |$i| foreach!($($r)+))
      }};
 }
             </code></pre>
@@ -869,18 +869,18 @@
             <h4> For Comprehension Declarative Macro </h4>
 
             <pre><code class="language-rust" data-noescape>macro_rules! foreach {
-     (i:ident <- ($e:expr) yield $r:expr) => {{
-        $e.map(move |i| $r)
+     ($i:ident <- ($e:expr) yield $r:expr) => {{
+        $e.map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
-        $e.filter(move |&i| $c).map(move |i| $r)
+     ($i:ident <- ($e:expr) if ($c:expr) yield $r:expr) => {{
+        $e.filter(move |&$i| $c).map(move |$i| $r)
      }};
-     (i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
-        $e.filter(move |&i| $c)
-          .map(move |i| foreach!($($r)+)).flatten()
+     ($i:ident <- ($e:expr) if ($c:expr) $($r:tt)+) => {{
+        $e.filter(move |&$i| $c)
+          .map(move |$i| foreach!($($r)+)).flatten()
      }};
-     (i:ident <- ($e:expr) $($r:tt)+) => {{
-        $e.map(move |i| foreach!($($r)+)).flatten()
+     ($i:ident <- ($e:expr) $($r:tt)+) => {{
+        $e.map(move |$i| foreach!($($r)+)).flatten()
      }};
 }
             </code></pre>
