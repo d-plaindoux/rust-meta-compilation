@@ -338,6 +338,25 @@
 
             <pre><code class="language-ebnf" data-noescape>
   comprehension ::=
+
+
+
+
+
+
+
+
+
+
+
+            </code></pre>
+        </section>
+
+        <section>
+            <h4> Scala For Comprehension Transpilation Sketch </h4>
+
+            <pre><code class="language-ebnf" data-noescape>
+  comprehension ::=
        i:ident "<-" e:expr "yield" r:expr =>
        { e.map(i => r) }
 

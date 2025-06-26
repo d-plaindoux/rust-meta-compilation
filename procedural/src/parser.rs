@@ -4,16 +4,19 @@
 //
 // comprehension ::=
 //   ident "<-" expr ("if" expr)? ("yield" expr | comprehension)
+//   ^----( 1 )----^ ^--( 2 )---^ ^-----------( 3 )------------^
 
 use crate::data::Comprehension;
 use syn::parse::ParseStream;
 
 impl syn::parse::Parse for Comprehension {
     fn parse(input: ParseStream) -> syn::Result<Self> {
+        // 1 - ident "<-" expr
         let ident = input.parse::<syn::Ident>()?;
         let _ = input.parse::<syn::Token![<-]>()?;
         let value = input.parse::<syn::Expr>()?;
 
+        // 2 - ("if" expr)?
         let condition = if input.lookahead1().peek(syn::Token![if]) {
             let _ = input.parse::<syn::Token![if]>()?;
             Some(input.parse::<syn::Expr>()?)
@@ -21,6 +24,7 @@ impl syn::parse::Parse for Comprehension {
             None
         };
 
+        // 3 - ("yield" expr | comprehension)
         if input.lookahead1().peek(syn::Token![yield]) {
             let _ = input.parse::<syn::Token![yield]>()?;
             let result = input.parse::<syn::Expr>()?;
