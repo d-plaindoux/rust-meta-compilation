@@ -4,7 +4,7 @@
 //
 // comprehension ::=
 //   ident "<-" expr ("if" expr)? ("yield" expr | comprehension)
-//   ^----( 1 )----^ ^--( 2 )---^ ^-----------( 3 )------------^
+//   ^____( 1 )____^ ^__( 2 )___^ ^___________( 3 )____________^
 
 use crate::data::Comprehension;
 use syn::parse::ParseStream;
