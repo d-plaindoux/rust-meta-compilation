@@ -38,7 +38,7 @@ impl syn::parse::Parse for Comprehension {
                 ident,
                 value,
                 condition,
-                next,
+                comprehension: next,
             })
         }
     }

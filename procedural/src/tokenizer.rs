@@ -26,7 +26,7 @@ impl quote::ToTokens for Comprehension {
                 ident,
                 value,
                 condition,
-                next,
+                comprehension: next,
             } => {
                 let next = next.to_token_stream();
 

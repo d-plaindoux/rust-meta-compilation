@@ -9,6 +9,6 @@ pub enum Comprehension {
         ident: syn::Ident,
         value: syn::Expr,
         condition: Option<syn::Expr>,
-        next: Box<Comprehension>,
+        comprehension: Box<Comprehension>,
     },
 }
