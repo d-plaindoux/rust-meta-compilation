@@ -1,8 +1,13 @@
 # rust-meta-compilation
 
-## SunnyTech 2025
+
+
+## Presentation
 
 [Rust meta-compilation presentation](http://d.plaindoux.free.fr/talks/sunny-tech/rust-meta-compilation/main.html)
+done for [SunnyTech 2025](https://sunny-tech.io).
+
+In this presentation, I also mention a project I work on using the procedural macros: [Celma](https://github.com/d-plaindoux/celma).
 
 # License
 
