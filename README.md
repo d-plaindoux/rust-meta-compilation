@@ -1,7 +1,5 @@
 # rust-meta-compilation
 
-
-
 ## Presentation
 
 [Rust meta-compilation presentation](http://d.plaindoux.free.fr/talks/sunny-tech/rust-meta-compilation/main.html)
