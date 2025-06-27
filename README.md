@@ -1,4 +1,4 @@
-# rust-meta-compilation
+# Metaprogramming in Rust
 
 ## Presentation
 
